@@ -17,7 +17,7 @@ import Combine
 /// - collectionView: set using diffable data source
 /// - activityIndicatorView: which appears during the url data task
 ///
-/// As the view is loaded, playersManager attempts to get all the players and teamsManager attempts to get all the teams (if the latter fails, an alert is presented). Note: the playersManager's error is not handled in this controller but when you present a DetailTeamViewController (it tries to get all the players again and if it fails again it shows an alert).
+/// As the view is loaded, teamsManager attempts to get all the teams (if it fails, an alert is presented).
 class ViewController: UIViewController {
     
     typealias DataSource = UICollectionViewDiffableDataSource<Section, TeamModel>

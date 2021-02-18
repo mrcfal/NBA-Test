@@ -35,7 +35,9 @@ class DetailPlayerViewController: UIViewController {
     
     private func setSubviews() {
         view.isUserInteractionEnabled = true
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurViewTapped(_:))))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(blurViewTapped(_:)))
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
         
         contentView = UIView()
         view.addSubview(contentView)
@@ -78,6 +80,8 @@ class DetailPlayerViewController: UIViewController {
                 
         titleLabel = UILabel(frame: .zero)
         titleLabel.text = playerInfoVM.title
+        titleLabel.numberOfLines = 2
+        titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.font = UIFont.preferredFont(forTextStyle: .title1)
         titleLabel.textAlignment = .left
         titleLabel.textColor = .white
@@ -104,5 +108,16 @@ class DetailPlayerViewController: UIViewController {
     
     @objc private func blurViewTapped(_ sender: UITapGestureRecognizer) {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+// avoid dismiss when tapping contentView
+extension DetailPlayerViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view?.isDescendant(of: contentView) == true {
+            return false
+        }
+        
+        return true
     }
 }

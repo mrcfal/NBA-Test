@@ -42,5 +42,9 @@ final class PlayerInfoViewModel {
         if let weight = player.weightPounds {
             playerInfo["Weight"] = String(format: "%.1f pounds", weight)
         }
+        
+        if let team = player.team {
+            playerInfo["Team"] = team.name
+        }
     }
 }

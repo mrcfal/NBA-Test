@@ -11,6 +11,14 @@ import Combine
 /// Conforms to RapidApiProtocol. The error is of type MyError and the result is of type MyListResponse\<PlayerModel\> (it has a *data* parameter of type [PlayerModel].
 ///
 /// The main responsibility of this class is to get all the players using the RapidAPI. See **RapidApiProtocol** for more info.
+///
+/// It implements pagination:
+/// - nextPage is incremented when the current request succeeds
+/// - players is set to collect all the players
+/// - isFull is set to true when result's "next_page" meta is nil
+///
+/// Note: there is not such a "get team's players" web service, for this reason this view model is a singleton, so that all the players are shared in the app and the
+/// pagination increases the more you scroll
 final class PlayersViewModel: ObservableObject, RapidApiProtocol {
     
     static let shared = PlayersViewModel()
@@ -22,9 +30,9 @@ final class PlayersViewModel: ObservableObject, RapidApiProtocol {
     @Published var isLoading: Bool = false
     @Published var players: [PlayerModel] = []
     
+    var isFull = false
     private var nextPage = 0
     private let perPage = 100
-    private var isFull = false
     
     var cancellable: AnyCancellable?
     private var resultPlayerCancellable: AnyCancellable?
@@ -48,7 +56,7 @@ final class PlayersViewModel: ObservableObject, RapidApiProtocol {
         
         do {
             let urlRequest = try getUrlRequest(path: "/players?page=\(nextPage)&per_page=\(perPage)")
-            print("calling \(String(describing: urlRequest.url?.absoluteString))")
+            
             perform(urlRequest: urlRequest, completion: { [weak self] result in
                 guard let self = self else { return }
                 if let value = result.meta["next_page"], let unwrappedValue = value {

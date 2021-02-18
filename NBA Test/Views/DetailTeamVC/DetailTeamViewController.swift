@@ -15,32 +15,38 @@ import Combine
 /// - tableView: that shows the list of players (its header shows the team info)
 /// - noPlayersLabel: which appears when the tableView numberOfRows is zero
 ///
-/// If ViewController failed when fetching the players, it tries again. If it fails it presents an alert.
+/// It sets the team players from the PlayersViewModel singleton. It loads more players when scrolling down or if players are not enough.
 /// If you tap on a player cell it presents the DetailPlayerViewController using a custom transition (see CardAnimator).
 class DetailTeamViewController: UIViewController {
     
     var teamPlayersVM: TeamPlayersViewModel!
 
+    // I want to load more items even when you do not scroll down but the current
+    // players in this team are not enough
+    private let minNumberOfPlayers = 15
+    // boolean to handle pagination when scrolling
+    private var isLoading = false
+
     private var tableView: UITableView!
     private var activityIndicatorView: UIActivityIndicatorView!
     private var noPlayersLabel: UILabel!
     private var subscriptions: Set<AnyCancellable> = []
-    
-    private var isLoading = false
+
+    private var cardAnimator: CardAnimator?
+
     var teamPlayerVMs: [PlayerViewModel] = [] {
         didSet {
-            if teamPlayerVMs.count < 15 {
+            if teamPlayerVMs.count < minNumberOfPlayers, PlayersViewModel.shared.isFull == false {
                 PlayersViewModel.shared.get()
             }
+            
             tableView.reloadData()
             #if DEBUG
             self.reloadData?(teamPlayerVMs)
             #endif
         }
     }
-    
-    private var cardAnimator: CardAnimator?
-    
+        
     #if DEBUG
     var reloadData: (([PlayerViewModel])->Void)?
     #endif
@@ -165,6 +171,7 @@ extension DetailTeamViewController: UIViewControllerTransitioningDelegate {
         return cardAnimator
     }
 }
+
 
 extension DetailTeamViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

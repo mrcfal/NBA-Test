@@ -15,7 +15,7 @@ import Combine
 ///
 /// Note:
 ///
-/// so far we have not API to fetch only the players that play in a specific team, that is why we want to fetch all the players (hopefully as soon as possible) and then filter the result based on the team.
+/// so far we have no API to fetch only the players that play in a specific team, that is why we want to fetch all the players (hopefully as soon as possible and handling the pagination using a singleton) and then filter the result based on the team.
 final class TeamPlayersViewModel: ObservableObject {
     @Published private(set) var teamPlayers: [PlayerModel] = []
     

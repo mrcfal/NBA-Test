@@ -38,7 +38,7 @@ final class CardAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         switch transitionMode {
         case .dismiss:
-            if let returningView = transitionContext.view(forKey: UITransitionContextViewKey.from) {
+            if let returningView = transitionContext.viewController(forKey:.from)?.view {
                 
                 UIView.animate(withDuration: duration, animations: {
                     self.blurView.effect = nil
@@ -50,7 +50,7 @@ final class CardAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 })
             }
         case .present:
-            if let presentedView = transitionContext.view(forKey: UITransitionContextViewKey.to) {
+            if let presentedView = transitionContext.viewController(forKey: .to)?.view {
                 self.blurView.effect = nil
                 containerView.addSubview(self.blurView)
                 blurView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +65,7 @@ final class CardAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 containerView.addSubview(presentedView)
                 
                 UIView.animate(withDuration: duration, animations: {
-                    self.blurView.effect = UIBlurEffect(style: .systemThinMaterialDark)
+                    self.blurView.effect = UIBlurEffect(style: .systemUltraThinMaterialDark)
                     presentedView.alpha = 1
                     presentedView.transform = .identity
                 }, completion: { success in
