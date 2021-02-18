@@ -27,7 +27,6 @@ class ViewController: UIViewController {
     private var collectionView: UICollectionView!
 
     private let teamsManager = TeamsViewModel()
-    private let playersManager = PlayersViewModel()
     private let filtersVM = FilterTeamsViewModel()
     private var subscriptions = Set<AnyCancellable>()
     private lazy var dataSource = makeDataSource()
@@ -47,7 +46,6 @@ class ViewController: UIViewController {
         setSearchController()
         setSubscriptions()
         teamsManager.get()
-        playersManager.get()
         applySnapshot(animatingDifferences: false)
         
         self.navigationItem.title = "NBA"
@@ -172,7 +170,6 @@ extension ViewController: UICollectionViewDelegate {
         guard let cell = collectionView.cellForItem(at: indexPath) as? TeamCollectionViewCell else { return }
         
         let destinationVC = DetailTeamViewController()
-        destinationVC.playersManager = playersManager
         destinationVC.teamPlayersVM = TeamPlayersViewModel(team: cell.teamVM.team)
         
         self.navigationController?.pushViewController(destinationVC, animated: true)

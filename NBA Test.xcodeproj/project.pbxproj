@@ -65,6 +65,7 @@
 		42E34C2825DE9FE0009C3EFE /* TeamCollectionViewCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E34C2725DE9FE0009C3EFE /* TeamCollectionViewCellTests.swift */; };
 		42E34C3025DEA231009C3EFE /* DetailTeamViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E34C2F25DEA231009C3EFE /* DetailTeamViewControllerTests.swift */; };
 		42E34C3825DEA5FC009C3EFE /* DetailPlayerViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E34C3725DEA5FC009C3EFE /* DetailPlayerViewControllerTests.swift */; };
+		42E34CF125DEF4A0009C3EFE /* Sequence+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E34CF025DEF49F009C3EFE /* Sequence+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -149,6 +150,7 @@
 		42E34C2725DE9FE0009C3EFE /* TeamCollectionViewCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCollectionViewCellTests.swift; sourceTree = "<group>"; };
 		42E34C2F25DEA231009C3EFE /* DetailTeamViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTeamViewControllerTests.swift; sourceTree = "<group>"; };
 		42E34C3725DEA5FC009C3EFE /* DetailPlayerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPlayerViewControllerTests.swift; sourceTree = "<group>"; };
+		42E34CF025DEF49F009C3EFE /* Sequence+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,6 +247,7 @@
 			children = (
 				42E34ACF25DD152E009C3EFE /* UIColor+Ext.swift */,
 				42E34BB825DE77A0009C3EFE /* Array+Ext.swift */,
+				42E34CF025DEF49F009C3EFE /* Sequence+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -537,6 +540,7 @@
 				42E34AE525DD1660009C3EFE /* TeamModel.swift in Sources */,
 				42E34BAC25DE68BA009C3EFE /* MyErrorProtocol.swift in Sources */,
 				42E34B5925DD44F0009C3EFE /* TeamCollectionViewCell.swift in Sources */,
+				42E34CF125DEF4A0009C3EFE /* Sequence+Ext.swift in Sources */,
 				42E34BBE25DE78C8009C3EFE /* PlayerInfoViewModel.swift in Sources */,
 				42E34AD025DD152E009C3EFE /* UIColor+Ext.swift in Sources */,
 				42E34B2A25DD27A0009C3EFE /* MyListResponse.swift in Sources */,

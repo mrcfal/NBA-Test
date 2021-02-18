@@ -26,6 +26,6 @@ final class TeamPlayersViewModel: ObservableObject {
     }
         
     func setPlayers(allPlayers: [PlayerModel]) {
-        teamPlayers = allPlayers.filter({ $0.team == team }).sorted(by: { $0.firstName < $1.firstName })
+        teamPlayers = allPlayers.filter({ $0.team == team })
     }
 }

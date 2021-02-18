@@ -23,7 +23,6 @@ class DetailTeamViewControllerTests: XCTestCase {
     }
     
     func test_tableView_reloadData_when_published_players_change() {
-        vc.playersManager = PlayersViewModel()
         vc.teamPlayersVM = teamPlayersVM
 
         let exp = expectation(description: "callback")
@@ -31,9 +30,10 @@ class DetailTeamViewControllerTests: XCTestCase {
 
         var playerName: String = ""
 
-        vc.reloadData = { [weak self] players in
-            playerName = players.first?.firstName ?? ""
-            if players.isEmpty == false {
+        vc.reloadData = { [weak self] playerVMs in
+            playerName = playerVMs.first?.player.firstName ?? ""
+            //avoid didLoad callback
+            if playerVMs.isEmpty == false {
                 exp.fulfill()
                 self?.vc.reloadData = nil
             }

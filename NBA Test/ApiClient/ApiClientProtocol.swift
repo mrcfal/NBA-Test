@@ -32,13 +32,13 @@ protocol ApiClientProtocol: AnyObject {
     var isLoading: Bool { get set }
     var cancellable: AnyCancellable? { get set }
     
-    func perform(urlRequest: URLRequest, numberOfRetry: Int)
+    func perform(urlRequest: URLRequest, numberOfRetry: Int, completion: @escaping((ResultType)->Void))
     func cancel()
 }
 
 extension ApiClientProtocol {
     
-    func perform(urlRequest: URLRequest, numberOfRetry: Int = 3) {
+    func perform(urlRequest: URLRequest, numberOfRetry: Int = 3, completion: @escaping((ResultType)->Void) = { _ in }) {
         var data: Data!
         cancellable = URLSession.shared.dataTaskPublisher(for: urlRequest)
             .retry(numberOfRetry)
@@ -73,6 +73,7 @@ extension ApiClientProtocol {
                 guard let self = self else { return }
                 
                 self.result = value
+                completion(value)
             })
     }
     

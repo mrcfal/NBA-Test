@@ -31,3 +31,5 @@ struct PlayerModel: Codable {
         case team
     }
 }
+
+extension PlayerModel: Hashable { }

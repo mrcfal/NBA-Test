@@ -111,6 +111,7 @@ class TeamInfoHeaderView: UITableViewHeaderFooterView {
             attributedString.append(NSAttributedString(string: item.value, attributes: [NSAttributedString.Key.font : UIFont.italicSystemFont(ofSize: UIFont.systemFontSize)]))
             let label = UILabel(frame: .zero)
             label.attributedText = attributedString
+            label.adjustsFontSizeToFitWidth = true
             label.textColor = .white
             vStack.addArrangedSubview(label)
         }

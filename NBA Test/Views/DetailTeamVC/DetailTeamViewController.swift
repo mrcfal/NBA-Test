@@ -19,8 +19,6 @@ import Combine
 /// If you tap on a player cell it presents the DetailPlayerViewController using a custom transition (see CardAnimator).
 class DetailTeamViewController: UIViewController {
     
-    //if view controller failed players fetching, try again
-    var playersManager: PlayersViewModel!
     var teamPlayersVM: TeamPlayersViewModel!
 
     private var tableView: UITableView!
@@ -28,12 +26,23 @@ class DetailTeamViewController: UIViewController {
     private var noPlayersLabel: UILabel!
     private var subscriptions: Set<AnyCancellable> = []
     
-    var teamPlayerVMs: [PlayerViewModel] = []
+    private var isLoading = false
+    var teamPlayerVMs: [PlayerViewModel] = [] {
+        didSet {
+            if teamPlayerVMs.count < 15 {
+                PlayersViewModel.shared.get()
+            }
+            tableView.reloadData()
+            #if DEBUG
+            self.reloadData?(teamPlayerVMs)
+            #endif
+        }
+    }
     
     private var cardAnimator: CardAnimator?
     
     #if DEBUG
-    var reloadData: (([PlayerModel])->Void)?
+    var reloadData: (([PlayerViewModel])->Void)?
     #endif
 
     override func viewDidLoad() {
@@ -41,15 +50,12 @@ class DetailTeamViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         
+        teamPlayersVM.setPlayers(allPlayers: PlayersViewModel.shared.players)
+        
         setTableView()
         setActivityIndicatorView()
         setNoPlayersLabel()
         setSubscriptions()
-        
-        //if view controller failed players fetching, get players
-        if playersManager.players.isEmpty, playersManager.isLoading == false {
-            playersManager.get()
-        }
         
         self.navigationItem.title = teamPlayersVM.team.name
     }
@@ -83,7 +89,7 @@ class DetailTeamViewController: UIViewController {
         view.addSubview(activityIndicatorView)
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        activityIndicatorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
     
     private func setNoPlayersLabel() {
@@ -103,42 +109,37 @@ class DetailTeamViewController: UIViewController {
     }
     
     private func setSubscriptions() {
-        playersManager.$result
-            .sink(receiveValue: { [weak self] result in
+        PlayersViewModel.shared.$players
+            .sink(receiveValue: { [weak self] players in
                 guard let self = self else { return }
-                guard let players = result?.data else { return }
                 self.teamPlayersVM.setPlayers(allPlayers: players)
             }).store(in: &subscriptions)
         
         teamPlayersVM.$teamPlayers.sink(receiveValue: { [weak self] players in
             guard let self = self else { return }
             self.teamPlayerVMs = players.map { PlayerViewModel(player: $0) }
+            
             if players.isEmpty {
                 self.noPlayersLabel.isHidden = false
             } else {
                 self.noPlayersLabel.isHidden = true
-                self.tableView.reloadData()
-                
-                #if DEBUG
-                self.reloadData?(players)
-                #endif
             }
         }).store(in: &subscriptions)
         
-        playersManager.$error.sink(receiveValue: { [weak self] error in
+        PlayersViewModel.shared.$error.sink(receiveValue: { [weak self] error in
             guard let self = self else { return }
             guard let error = error else { return }
             
             let alert = UIAlertController(title: "☹️ \(error.message)", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { _ in
-                self.playersManager.get()
+                PlayersViewModel.shared.get()
             }))
             
             self.present(alert, animated: true, completion: nil)
         })
         .store(in: &subscriptions)
         
-        playersManager.$isLoading.sink(receiveValue: { [weak self] isLoading in
+        PlayersViewModel.shared.$isLoading.sink(receiveValue: { [weak self] isLoading in
             guard let self = self else { return }
             if isLoading {
                 self.activityIndicatorView.startAnimating()
@@ -162,5 +163,23 @@ extension DetailTeamViewController: UIViewControllerTransitioningDelegate {
 
         cardAnimator = CardAnimator(mode: .dismiss, duration: 0.4)
         return cardAnimator
+    }
+}
+
+extension DetailTeamViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        
+        if offsetY > contentHeight - scrollView.frame.height {
+            if PlayersViewModel.shared.isLoading == false, isLoading {
+                isLoading = false
+                PlayersViewModel.shared.get()
+            }
+        }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.isLoading = true
     }
 }
