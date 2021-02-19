@@ -19,6 +19,9 @@ import Combine
 /// If you tap on a player cell it presents the DetailPlayerViewController using a custom transition (see CardAnimator).
 class DetailTeamViewController: UIViewController {
     
+    //NEW - replace datasource with diffable datasource
+    private lazy var dataSource = makeDataSource()
+    
     var teamPlayersVM: TeamPlayersViewModel!
 
     // I want to load more items even when you do not scroll down but the current
@@ -40,7 +43,9 @@ class DetailTeamViewController: UIViewController {
                 PlayersViewModel.shared.get()
             }
             
-            tableView.reloadData()
+            applySnapshot(animatingDifferences: true)
+//            tableView.reloadData()
+
             #if DEBUG
             self.reloadData?(teamPlayerVMs)
             #endif
@@ -63,6 +68,8 @@ class DetailTeamViewController: UIViewController {
         setNoPlayersLabel()
         setSubscriptions()
         
+        applySnapshot(animatingDifferences: false)
+        
         self.navigationItem.title = teamPlayersVM.team.name
     }
     
@@ -79,7 +86,8 @@ class DetailTeamViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
         
-        tableView.dataSource = self
+        //NEW - replaced with diffable datasource
+//        tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = UITableView.automaticDimension
@@ -188,5 +196,32 @@ extension DetailTeamViewController: UIScrollViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.isLoading = true
+    }
+}
+
+// NEW - replace datasource with diffable datasource
+extension DetailTeamViewController {
+    typealias DataSource = UITableViewDiffableDataSource<Section, PlayerModel>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, PlayerModel>
+
+    func makeDataSource() -> DataSource {
+        let dataSource = DataSource(
+            tableView: tableView,
+            cellProvider: { (tableView, indexPath, player) ->
+                UITableViewCell? in
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: "playerCellID",
+                    for: indexPath) as? PlayerTableViewCell
+                cell?.playerVM = PlayerViewModel(player: player)
+                return cell
+            })
+        return dataSource
+    }
+    
+    func applySnapshot(animatingDifferences: Bool = true) {
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(teamPlayerVMs.map { $0.player })
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }
