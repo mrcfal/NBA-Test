@@ -151,6 +151,8 @@
 		42E34C2F25DEA231009C3EFE /* DetailTeamViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTeamViewControllerTests.swift; sourceTree = "<group>"; };
 		42E34C3725DEA5FC009C3EFE /* DetailPlayerViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPlayerViewControllerTests.swift; sourceTree = "<group>"; };
 		42E34CF025DEF49F009C3EFE /* Sequence+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Ext.swift"; sourceTree = "<group>"; };
+		42E34CF525DFBF04009C3EFE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		42E34CF625DFBF39009C3EFE /* nba_arch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nba_arch.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +183,8 @@
 		42E34A8F25DD13E1009C3EFE = {
 			isa = PBXGroup;
 			children = (
+				42E34CF525DFBF04009C3EFE /* README.md */,
+				42E34CF625DFBF39009C3EFE /* nba_arch.png */,
 				42E34A9A25DD13E1009C3EFE /* NBA Test */,
 				42E34AB125DD13E6009C3EFE /* NBA TestTests */,
 				42E34ABC25DD13E6009C3EFE /* NBA TestUITests */,
