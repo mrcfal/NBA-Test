@@ -19,7 +19,7 @@ When selecting a player the view controller presents the third view controller (
 ###### 2. `/players` implements pagination.
 
 ## Architecture
-![NBA Test Architecture]("nba_arch.png")
+![NBA Test Architecture](nba_arch.png)
 
 ### Extra
 - Dark Mode
