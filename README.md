@@ -15,7 +15,7 @@ When selecting a player the view controller presents the third view controller (
 - [RapidAPI](https://rapidapi.com/theapiguy/api/free-nba/endpoints) - used to fetch the list of teams `/teams` and the list of all players `/players`; 
 - [NBA website](https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/atl.png) - used to fetch the teams' logos.
 
-###### 1. RapidAPI does not provide a web service that returns the players given a specific team. You can read below how it effected the app architecture. 
+###### 1. RapidAPI does not provide a web service that returns the players given a specific team. You can read below how it affected the app architecture. 
 ###### 2. `/players` implements pagination.
 
 ## Architecture
